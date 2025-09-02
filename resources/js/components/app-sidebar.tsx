@@ -21,8 +21,8 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth } = usePage<{ auth: { user: { is_admin?: boolean } } }>().props;
-    const isAdmin = auth.user?.is_admin;
+    const { auth } = usePage<{ auth: { user: { role?: string } } }>().props;
+    const canManageComplaints = auth.user?.role === 'admin' || auth.user?.role === 'officer';
 
     const mainNavItems: NavItem[] = [
         {
@@ -30,19 +30,18 @@ export function AppSidebar() {
             href: '/dashboard',
             icon: LayoutGrid,
         },
-        ...(isAdmin ? [
+        ...(canManageComplaints ? [
             {
                 title: 'Kelola Pengaduan',
                 href: '/admin/complaints',
                 icon: Settings,
             },
-        ] : [
-            {
-                title: 'Pengaduan Saya',
-                href: '/complaints',
-                icon: FileText,
-            },
-        ]),
+        ] : []),
+        {
+            title: 'Pengaduan Saya',
+            href: '/complaints',
+            icon: FileText,
+        },
     ];
 
     return (

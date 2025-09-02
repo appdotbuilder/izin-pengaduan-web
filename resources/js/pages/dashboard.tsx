@@ -32,9 +32,9 @@ interface Props {
 
 export default function Dashboard({ stats }: Props) {
     const { auth } = usePage<SharedData>().props;
-    const isAdmin = auth.user && 'is_admin' in auth.user ? auth.user.is_admin : false;
+    const canManageComplaints = auth.user?.role === 'admin' || auth.user?.role === 'officer';
 
-    if (isAdmin) {
+    if (canManageComplaints) {
         return <AdminDashboard stats={stats} />;
     }
 
@@ -42,16 +42,19 @@ export default function Dashboard({ stats }: Props) {
 }
 
 function AdminDashboard({ stats }: { stats?: DashboardStats }) {
+    const { auth } = usePage<SharedData>().props;
+    const roleName = auth.user?.role === 'admin' ? 'Admin' : 'Petugas';
+    
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard Admin" />
+            <Head title={`Dashboard ${roleName}`} />
             
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             <div className="mb-6">
-                                <h1 className="text-3xl font-bold">🛠️ Dashboard Admin</h1>
+                                <h1 className="text-3xl font-bold">🛠️ Dashboard {roleName}</h1>
                                 <p className="mt-2 text-gray-600 dark:text-gray-400">
                                     Kelola sistem pengaduan izin
                                 </p>

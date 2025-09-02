@@ -1,8 +1,23 @@
 import { type SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router, useForm } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
+    
+    const { data, setData, processing, errors } = useForm({
+        complaint_id: '',
+    });
+
+    const handleTrackSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (data.complaint_id) {
+            router.visit(`/track/${data.complaint_id}`);
+        }
+    };
 
     return (
         <>
@@ -86,6 +101,45 @@ export default function Welcome() {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Public Tracking Section */}
+                            <Card className="mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-lg">
+                                        🔍 Lacak Pengaduan Anda
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                                        Masukkan ID pengaduan untuk melihat status dan progress terkini
+                                    </p>
+                                    <form onSubmit={handleTrackSubmit} className="flex gap-3">
+                                        <div className="flex-1">
+                                            <Label htmlFor="complaint_id" className="sr-only">
+                                                ID Pengaduan
+                                            </Label>
+                                            <Input
+                                                id="complaint_id"
+                                                type="text"
+                                                placeholder="Masukkan ID Pengaduan (contoh: 1, 2, 3)"
+                                                value={data.complaint_id}
+                                                onChange={(e) => setData('complaint_id', e.target.value)}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                        <Button 
+                                            type="submit" 
+                                            disabled={processing || !data.complaint_id}
+                                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                                        >
+                                            🔍 Lacak
+                                        </Button>
+                                    </form>
+                                    {errors.complaint_id && (
+                                        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.complaint_id}</p>
+                                    )}
+                                </CardContent>
+                            </Card>
                             
                             {/* CTA Buttons */}
                             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">

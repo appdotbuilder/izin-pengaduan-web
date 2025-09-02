@@ -19,7 +19,16 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@pengaduan.test',
             'address' => 'Jl. Pemerintahan No. 1, Jakarta',
             'phone' => '021-12345678',
-            'is_admin' => true,
+            'role' => 'admin',
+        ]);
+
+        // Create officer user
+        $officer = User::factory()->create([
+            'name' => 'Petugas Pengaduan',
+            'email' => 'officer@pengaduan.test',
+            'address' => 'Jl. Pelayanan No. 2, Jakarta',
+            'phone' => '021-87654321',
+            'role' => 'officer',
         ]);
 
         // Create regular users

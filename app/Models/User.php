@@ -17,7 +17,7 @@ use Illuminate\Notifications\Notifiable;
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $address
  * @property string $phone
- * @property bool $is_admin
+ * @property string $role
  * @property string $password
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -36,7 +36,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
@@ -61,7 +61,7 @@ class User extends Authenticatable
         'address',
         'phone',
         'password',
-        'is_admin',
+        'role',
     ];
 
     /**
@@ -84,7 +84,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
         ];
     }
 
@@ -94,5 +93,29 @@ class User extends Authenticatable
     public function complaints(): HasMany
     {
         return $this->hasMany(Complaint::class);
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is an officer.
+     */
+    public function isOfficer(): bool
+    {
+        return $this->role === 'officer';
+    }
+
+    /**
+     * Check if the user can manage complaints (admin or officer).
+     */
+    public function canManageComplaints(): bool
+    {
+        return in_array($this->role, ['admin', 'officer']);
     }
 }

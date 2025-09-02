@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $user
+ * @property-read string|null $attachment_url
  * 
  * @method static \Illuminate\Database\Eloquent\Builder|Complaint newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Complaint newQuery()
@@ -105,5 +106,13 @@ class Complaint extends Model
             'rejected' => 'Ditolak',
             default => 'Unknown',
         };
+    }
+
+    /**
+     * Get the full URL for the attachment file.
+     */
+    public function getAttachmentUrlAttribute(): ?string
+    {
+        return $this->attachment ? asset('storage/' . $this->attachment) : null;
     }
 }

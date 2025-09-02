@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
-            'is_admin' => false,
+            'role' => 'user',
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
@@ -51,7 +51,17 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_admin' => true,
+            'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an officer.
+     */
+    public function officer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'officer',
         ]);
     }
 }

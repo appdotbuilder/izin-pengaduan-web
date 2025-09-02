@@ -59,8 +59,8 @@ class ComplaintController extends Controller
      */
     public function show(Complaint $complaint)
     {
-        // Ensure user can only view their own complaints unless they're admin
-        if (!auth()->user()->is_admin && $complaint->user_id !== auth()->id()) {
+        // Ensure user can only view their own complaints unless they can manage complaints
+        if (!auth()->user()->canManageComplaints() && $complaint->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -70,4 +70,6 @@ class ComplaintController extends Controller
             'complaint' => $complaint
         ]);
     }
+
+
 }

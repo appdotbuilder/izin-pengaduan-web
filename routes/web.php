@@ -16,11 +16,14 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+// Public complaint tracking route (no authentication required)
+Route::get('/track/{complaint}', [\App\Http\Controllers\PublicComplaintController::class, 'show'])->name('complaints.track');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         $user = auth()->user();
         
-        if ($user->is_admin) {
+        if ($user->canManageComplaints()) {
             // Admin dashboard statistics
             $stats = [
                 'total_complaints' => \App\Models\Complaint::count(),

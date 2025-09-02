@@ -15,8 +15,8 @@ class AdminComplaintController extends Controller
      */
     public function index(Request $request)
     {
-        // Check admin access
-        if (!auth()->check() || !auth()->user()->is_admin) {
+        // Check admin or officer access
+        if (!auth()->check() || !auth()->user()->canManageComplaints()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -57,8 +57,8 @@ class AdminComplaintController extends Controller
      */
     public function show(Complaint $complaint)
     {
-        // Check admin access
-        if (!auth()->check() || !auth()->user()->is_admin) {
+        // Check admin or officer access
+        if (!auth()->check() || !auth()->user()->canManageComplaints()) {
             abort(403, 'Unauthorized action.');
         }
 
